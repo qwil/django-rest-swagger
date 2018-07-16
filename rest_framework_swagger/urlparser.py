@@ -1,5 +1,6 @@
 import re
 import os
+from collections import Set
 from importlib import import_module
 
 from django.conf import settings
@@ -96,8 +97,10 @@ class UrlParser(object):
 
         return list(filtered_paths)
 
-    def __get_base_path__(self, root_paths):
-        base_path = os.path.commonprefix(root_paths)
+    def __get_base_path__(self, root_paths: Set):
+        # Python 3.6 no longer accepts Sets to os.path.commonprefix.
+        paths = list(root_paths)
+        base_path = os.path.commonprefix(paths)
         slash_index = base_path.rfind('/') + 1
         base_path = base_path[:slash_index]
 
